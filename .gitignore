@@ -5,6 +5,8 @@ __pycache__/
 
 Reads/
 
+Arabidopsis_thaliana/
+
 # C extensions
 *.so
 
