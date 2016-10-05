@@ -7,7 +7,7 @@ Reads/
 omalley/
 notes.*
 
-Arabidopsis_thaliana/
+genome/
 
 # C extensions
 *.so
