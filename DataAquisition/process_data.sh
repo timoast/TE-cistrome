@@ -36,6 +36,19 @@ samtools faidx tair10.fa
 cut -f 1,2 tair10.fa.fai > tair10.chr.sizes
 rm tair10.fa.fai
 
+# gem also needs each chromosome in a file separately
+awk '/>/{x="chr"++i;}{print > x".fa";}' tair10.fa
+mv chr6.fa chrMt.fa
+mv chr7.fa chrPt.fa
+# and the headers need to be changed slightly
+sed -i '/>chr1/c\>chr1' chr1.fa
+sed -i '/>chr2/c\>chr2' chr2.fa
+sed -i '/>chr3/c\>chr3' chr3.fa
+sed -i '/>chr4/c\>chr4' chr4.fa
+sed -i '/>chr5/c\>chr5' chr5.fa
+sed -i '/>chrMt/c\>chrMt' chrMt.fa
+sed -i '/>chrPt/c\>chrPt' chrPt.fa
+
 # Build index
 # As we want to look for and report potentially many alignments,
 # we set the offrate to 3, and this will speed up alignment
@@ -43,6 +56,10 @@ rm tair10.fa.fai
 bowtie2-build --threads 10 --offrate 3 tair10.fa tair10
 genome_path=`pwd`
 cd ../Reads
+
+# create alias for gem
+alias gem="/home/tstuart/working_data/Tools/jre1.8.0_77/bin/java -jar \
+/home/tstuart/working_data/Tools/gem/gem.jar"
 
 # define a function to do the mapping
 map() {
@@ -67,12 +84,13 @@ for directory in ./*; do
 	cd ~/scratch/$directory
 	map $directory $genome_path/tair10
 	current_time=`date`
-	printf "\tFinished mapping ${directory} at ${current_time}\n"
+	printf "Finished mapping ${directory} at ${current_time}\n"
 	printf "Calling peaks\n"
 	gem --f SAM --k_min 6 --kmax 20 --k_seqs 600 \
 	    --k_neg_dinu_shuffle --t 10 --q 2 \
 	    --d ~/working_data/Tools/gem/Read_Distribution_default.txt \
 	    --g $genome_path/tair10.chr.sizes \
+	    --genome $genome_path \
 	    --expt $directory.bam
 	cd ..
 	mv $directory $wd
