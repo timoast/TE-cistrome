@@ -91,7 +91,9 @@ for directory in ./*; do
 	    --d ~/working_data/Tools/gem/Read_Distribution_default.txt \
 	    --g $genome_path/tair10.chr.sizes \
 	    --genome $genome_path \
-	    --expt $directory.bam
+	    --expt $directory.bam \
+	    --out $directory \
+	    --outBED --outMEME
 	cd ..
 	mv $directory $wd
 	cd $wd
