@@ -92,8 +92,7 @@ for directory in ./*; do
 	    --g $genome_path/tair10.chr.sizes \
 	    --genome $genome_path \
 	    --expt $directory.bam \
-	    --out $directory \
-	    --outBED --outMEME
+	    --out $directory
 	cd ..
 	mv $directory $wd
 	cd $wd
