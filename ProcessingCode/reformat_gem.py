@@ -12,5 +12,5 @@ with open(sys.argv[1], 'r') as infile:
         chromosome = "chr" + coords[0]
         position = int(coords[1]) - 25
         end = int(coords[1]) + 25
-        data = [chromosome, position, str(end)]
+        data = [chromosome, str(position), str(end)]
         print("\t".join(data) + "\t" + "\t".join(line[1:]))
