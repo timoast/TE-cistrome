@@ -1,0 +1,195 @@
+---
+title: "peaks"
+author: "Tim Stuart"
+date: "14/10/2016"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# TF peaks
+
+Aim: to determine the proportion of TF peaks within each TE family, and the proportion of TE family members containing peaks.
+
+See this video for useful information on using bioconductor: https://www.coursera.org/learn/bioconductor/lecture/cXsWM/usecase-annotationhub-and-granges-part-2
+
+First, we import some peak data as a genomic ranges object, as well as our TE annotations. I will use just one of the TFs for this example, and later apply to all TFs. I'm choosing the E2F TF, as it was previously shown to be enriched within TEs in Arabidopsis (Henaff et al. 2014 The Plant Journal).
+
+```{r import, message=FALSE, warning=TRUE}
+library(GenomicRanges)
+library(rtracklayer)
+library(dplyr)
+library(ggplot2)
+```
+
+```{r load_peaks}
+peaks <- import("../RawData/peaks/E2FDP_tnt/E2FA_col_a/chr1-5/chr1-5_GEM_events.narrowPeak",
+                format = "bed",
+                extraCols = c(name = "character",
+                              score = "numeric",
+                              strand = "character",
+                              signalValue = "numeric",
+                              pValue = "numeric",
+                              qValue = "numeric",
+                              peak = "numeric"))
+peaks
+```
+
+Now load the TE annotations
+
+```{r load_tes}
+te <- import("../../TEPID/Annotation/Arabidopsis/TAIR9_TE.bed.gz",
+             format = "bed",
+             extraCols = c(strand = "character",
+                           TE = "character",
+                           family = "character",
+                           superfamily = "character"))
+te
+```
+
+Intersect the peaks with TE annotations and record the number of intersections for each TE family.
+
+```{r intersect_peaks}
+# peaks don't have strand so ignore.strand doesn't actually matter, just keeping it for now
+hits <- findOverlaps(te, peaks, ignore.strand = TRUE)
+peaks_in_tes <- length(subsetByOverlaps(peaks, te)) / length(peaks) * 100
+te_with_peaks <- length(subsetByOverlaps(te, peaks)) / length(te) * 100
+```
+
+So we find that `r round(peaks_in_tes, 2)`% of E2F peaks are within a TE and `r round(te_with_peaks)`% of all TEs contain a peak. We need to also know what the expected percentage would be considering the size of the genome and the number of peaks (see coursera course video, should be able to use an odds ratio). We also need to test the proportion of all peaks that are within each TE family.
+
+```{r overlaps}
+te_enrichment <- as_data_frame(subsetByOverlaps(te, peaks))
+```
+
+Now test for overrepresentation of certain families.
+
+```{r family}
+n_peak_te <- nrow(te_enrichment)
+family_enrichment <- te_enrichment %>%
+  group_by(family) %>%
+  mutate(count = n(), proportion = count / n_peak_te * 100) %>%
+  select(count, proportion, family) %>%
+  unique()
+
+n_te <- length(te)
+all_te <- as_data_frame(te) %>%
+  group_by(family) %>%
+  mutate(total_count = n(), prop_family = total_count / n_te * 100) %>%
+  select(total_count, prop_family, family) %>%
+  unique()
+
+# join
+joined_data <- left_join(all_te, family_enrichment)
+joined_data[is.na(joined_data)] <- 0
+joined_data <- mutate(joined_data, enrichment = log2((proportion + 1) / (prop_family + 1)))
+
+ggplot(joined_data, aes(family, enrichment)) + geom_bar(stat = "identity") +
+  theme(axis.text.x = element_text(angle = 90, hjust = 1))
+
+library(RColorBrewer)
+colors <- colorRampPalette(brewer.pal(9,"RdYlBu"))(100)
+image(as.matrix(joined_data$enrichment), col = rev(colors))
+```
+
+
+And now using TE superfamiles
+
+```{r superfamilies}
+n_peak_te <- nrow(te_enrichment)
+sfamily_enrichment <- te_enrichment %>%
+  group_by(superfamily) %>%
+  mutate(count = n(), proportion = count / n_peak_te * 100) %>%
+  select(count, proportion, superfamily) %>%
+  unique()
+
+n_te <- length(te)
+all_te_sfam <- as_data_frame(te) %>%
+  group_by(superfamily) %>%
+  mutate(total_count = n(), prop_family = total_count / n_te * 100) %>%
+  select(total_count, prop_family, superfamily) %>%
+  unique()
+
+# join
+sfam_joined_data <- left_join(all_te_sfam, sfamily_enrichment)
+sfam_joined_data[is.na(sfam_joined_data)] <- 0
+sfam_joined_data <- mutate(sfam_joined_data, enrichment = log2((proportion + 1) / (prop_family + 1)))
+
+ggplot(sfam_joined_data, aes(superfamily, enrichment)) + geom_bar(stat = "identity") +
+  theme(axis.text.x = element_text(angle = 90, hjust = 1))
+
+image(as.matrix(sfam_joined_data$enrichment), col = rev(colors))
+```
+
+Not seeing any large enrichment for a particular family or superfamily. It may be that this particular TF is not associated with a TE family. Alternatively, I may need to repeat this with a set of peaks called from multimapped reads.
+
+For now, let's move on and estimate the expected proportion of peaks found in TEs
+
+## Expected overlap
+
+Find how many bases the peaks cover (in Mb)
+
+```{r}
+sum(width(reduce(peaks, ignore.strand = TRUE))) / 10^6
+```
+
+And TEs
+
+```{r}
+sum(width(reduce(te, ignore.strand = TRUE))) / 10^6
+```
+
+And the intersection of the two
+
+```{r}
+sum(width(GenomicRanges::intersect(peaks, te, ignore.strand = TRUE))) / 10^6
+```
+
+Odds ratio
+
+```{r}
+# construct matrix
+inOut <- matrix(0, ncol = 2, nrow = 2)
+colnames(inOut) <- c("in", "out")
+rownames(inOut) <- c("in", "out")
+inOut
+```
+
+Fill with values
+
+```{r}
+inOut[1,1] <- sum(width(GenomicRanges::intersect(peaks, te, ignore.strand = TRUE)))
+inOut[1,2] <- sum(width(GenomicRanges::setdiff(peaks, te, ignore.strand = TRUE)))
+inOut[2,1] <- sum(width(GenomicRanges::setdiff(te, peaks, ignore.strand = TRUE)))
+inOut
+```
+
+```{r}
+inOut[2,2] <- 120*10^6 - sum(inOut)
+inOut
+```
+
+odds ratio
+
+```{r fisher_test}
+f <- fisher.test(inOut)
+f$estimate
+```
+
+or manually
+
+```{r}
+oddRatio <- inOut[1,1] * inOut[2,2] / (inOut[2,1] * inOut[1,2])
+oddRatio
+```
+
+Log odds ratio
+
+```{r}
+log10(oddRatio)
+```
+
+So according to our peak data, there is NOT and enrichement for E2F sites within TEs. I will next try motif scanning in a separate document, which may be less influenced by poor mappability within TEs causing the loss of peaks.
+
