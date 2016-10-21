@@ -1,0 +1,175 @@
+---
+title: "Motif scans"
+author: "Tim Stuart"
+date: "19/10/2016"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# Motif scans
+
+For each motif, scan the genome for instances of the motif. Then find the proportion of motifs that are found in each TE family, and the proportion of TE family members that contain the motif. Write this information as a line in a file (one file for each case -- TEs with motifs or motifs in TEs), and generate a plot for each TF showing the most highly enriched TE families, and perhaps the odds ratio for enrichment within TEs.
+
+```{r import, message=FALSE}
+library(BSgenome.Athaliana.TAIR.TAIR9)
+library(seqLogo)
+library(Biostrings)
+library(BiocParallel)
+library(rtracklayer)
+library(dplyr)
+library(tidyr)
+library(ggplot2)
+```
+
+First, we need a list of all file names (with paths) that we will apply a function to.
+
+```{r file_list}
+files <- list.dirs("../RawData/motifs")
+contains_meme <- lapply(files, grepl, pattern = "meme_out")
+files <- files[unlist(contains_meme)]
+files <- lapply(files, paste, "/meme_m1.txt", sep = "")
+```
+
+Now define the functions we will need:  
+
+* create a position weight matrix from the meme file  
+* record the name of the TF from the meme file  
+* scan the genome for the motif  
+* intersect the TE annotations with the identified motif positions  
+* calculate the proportion of motifs inside each TE family  
+* calculate the proportion of TE family members that contain the motif
+
+```{r functions}
+read_meme <- function(meme) {
+        meme_matrix <- as.matrix(read.table(meme, skip= 12,
+                                            col.names = c("A", "C", "G", "T")))
+        pwm <- t(meme_matrix)
+        return(pwm)
+}
+
+find_enrichment <- function(matches, all_te, te_with_motif, te_dataframe) {
+        # first create a dataframe with the percentage of all
+        # motifs that are in each family
+        df <- data_frame(family = character(), perc_motif_in_family = numeric())
+        x <- 1
+        for(te in unique(all_te$family)) {
+                subs <- all_te[all_te$family == te]
+                olaps <- findOverlaps(matches, reduce(subs), ignore.strand = TRUE)
+                perc <- length(olaps) / length(matches) * 100
+                df[x,1] <- te
+                df[x,2] <- perc
+                x <- x + 1
+        }
+        
+        # now create dataframe with the percentage of family
+        # members that contain an instance of the motif
+        family_count_with_motif <- te_with_motif %>%
+                select(TE, family) %>%
+                unique() %>%
+                group_by(family) %>%
+                mutate(family_count = n()) %>%
+                select(family, family_count) %>%
+                unique()
+        
+        # work out what fraction of family members have the motif 
+        # by joining with data for all TEs in the genome
+        family_perc_with_motif <- left_join(te_dataframe, family_count_with_motif) %>%
+                mutate(perc_family_with_motif = family_count / count_te * 100)
+        
+        # join into one dataframe
+        all_data <- left_join(family_perc_with_motif, df)
+        all_data[is.na(all_data)] <- 0
+        return(all_data)
+}
+
+# take the motif, scan genome, intersect TEs, append to files
+scan_genome <- function(infile, genome, te_biostring, te_dataframe, te_file, motif_file, cutoff = "85%") {
+        # read the motif
+        pwm <- read_meme(infile)
+        tf_name <- as.character(read.table(infile, skip = 9, nrows = 1)[,2])
+        tf_name <- unlist(strsplit(tf_name, ".", fixed = TRUE))[2]
+        
+        # scan the genome for motif
+        matches <- matchPWM(pwm, genome, cutoff)
+        matches <- dropSeqlevels(matches, c("ChrM", "ChrC"))
+        
+        # find overlaps with the TE annotation
+        motif_overlaps <- findOverlaps(matches, all_te, ignore.strand = TRUE)
+        te_with_motif <- as_data_frame(all_te[subjectHits(motif_overlaps)])
+        enrichments <- find_enrichment(matches, all_te, te_with_motif, te_dataframe)
+
+        # find proportion of TE families with motif
+        proportion_family_with_motif <- select(enrichments, family, perc_family_with_motif) %>%
+                spread(family, perc_family_with_motif)
+        proportion_family_with_motif$TF <- tf_name
+        
+        # find proportion of motifs in TE families
+        proportion_motifs_in_family <- select(enrichments, family, perc_motif_in_family) %>%
+                spread(family, perc_motif_in_family)
+        proportion_motifs_in_family$TF <- tf_name
+        
+        # append results to file
+        write.table(proportion_family_with_motif,
+                    file = te_file,
+                    append = TRUE,
+                    col.names = !file.exists(te_file),
+                    quote = FALSE,
+                    row.names = FALSE,
+                    sep = "\t")
+        write.table(proportion_motifs_in_family,
+                    file = motif_file,
+                    append = TRUE,
+                    col.names = !file.exists(motif_file),
+                    quote = FALSE,
+                    row.names = FALSE,
+                    sep = "\t")
+}
+```
+
+Load the TE annotations
+
+```{r load_te}
+all_te <- import("../RawData/TAIR9_TE.bed.gz",
+             format = "bed",
+             extraCols = c(strand = "character",
+                           TE = "character",
+                           family = "character",
+                           superfamily = "character"))
+# make chromosome names match the genome
+all_te <- renameSeqlevels(all_te, c("Chr1", "Chr2", "Chr3", "Chr4", "Chr5"))
+
+# get counts for each TE family
+te_data <- as_data_frame(all_te) %>%
+        group_by(family) %>%
+        mutate(count_te = n()) %>%
+        select(family, count_te) %>%
+        unique() %>%
+        ungroup()
+```
+
+First test on one file
+
+```{r test}
+scan_genome(files[[1]], genome = Athaliana, te_biostring = all_te, te_dataframe = te_data,
+            te_file = "test_te_file.tsv", motif_file = "test_motif_file.tsv")
+```
+
+```{r}
+# remove those test files
+file.remove("test_te_file.tsv")
+file.remove("test_motif_file.tsv")
+```
+
+Apply to list of files
+
+```{r apply_list, message=FALSE, warning=FALSE}
+bplapply(files, scan_genome,
+       genome = Athaliana,
+       te_biostring = all_te,
+       te_dataframe = te_data,
+       te_file = "../ProcessedData/families_with_motif.tsv",
+       motif_file = "../ProcessedData/motifs_in_te.tsv")
+```
