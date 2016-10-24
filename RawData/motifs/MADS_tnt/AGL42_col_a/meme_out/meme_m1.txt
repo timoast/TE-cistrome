@@ -1,0 +1,20 @@
+MEME version 4.4
+
+ALPHABET= ACGT
+
+strands: + -
+
+Background letter frequencies (from /mnt/thumper-e1/home/shhuang/projects/dap/analysis.v4/gem07_rep_memechip03/MADS_tnt/AGL42_col_a/background):
+A 0.30100 C 0.19900 G 0.19900 T 0.30100 
+
+MOTIF MADS_tnt.AGL42_col_a_m1 MEME
+
+letter-probability matrix: alength= 4 w= 7 nsites= 146 E= 1.2e-095
+  0.000000	  1.000000	  0.000000	  0.000000	
+  1.000000	  0.000000	  0.000000	  0.000000	
+  0.000000	  0.082192	  0.000000	  0.917808	
+  0.000000	  1.000000	  0.000000	  0.000000	
+  1.000000	  0.000000	  0.000000	  0.000000	
+  0.000000	  0.000000	  0.000000	  1.000000	
+  0.116438	  0.500000	  0.109589	  0.273973	
+

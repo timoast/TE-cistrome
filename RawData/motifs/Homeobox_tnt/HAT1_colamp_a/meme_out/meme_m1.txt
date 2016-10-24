@@ -1,0 +1,24 @@
+MEME version 4.4
+
+ALPHABET= ACGT
+
+strands: + -
+
+Background letter frequencies (from /mnt/thumper-e1/home/shhuang/projects/dap/analysis.v4/gem07_rep_memechip03/Homeobox_tnt/HAT1_colamp_a/background):
+A 0.33600 C 0.16400 G 0.16400 T 0.33600 
+
+MOTIF Homeobox_tnt.HAT1_colamp_a_m1 MEME
+
+letter-probability matrix: alength= 4 w= 11 nsites= 130 E= 6.2e-167
+  0.184615	  0.384615	  0.207692	  0.223077	
+  0.176923	  0.415385	  0.076923	  0.330769	
+  0.907692	  0.007692	  0.000000	  0.084615	
+  1.000000	  0.000000	  0.000000	  0.000000	
+  0.000000	  0.000000	  0.000000	  1.000000	
+  0.007692	  0.000000	  0.992308	  0.000000	
+  1.000000	  0.000000	  0.000000	  0.000000	
+  0.000000	  0.000000	  0.000000	  1.000000	
+  0.000000	  0.000000	  0.007692	  0.992308	
+  0.507692	  0.000000	  0.484615	  0.007692	
+  0.330769	  0.200000	  0.307692	  0.161538	
+

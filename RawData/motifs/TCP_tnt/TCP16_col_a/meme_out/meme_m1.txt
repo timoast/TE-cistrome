@@ -1,0 +1,24 @@
+MEME version 4.4
+
+ALPHABET= ACGT
+
+strands: + -
+
+Background letter frequencies (from /mnt/thumper-e1/home/shhuang/projects/dap/analysis.v4/gem07_rep_memechip03/TCP_tnt/TCP16_col_a/background):
+A 0.27500 C 0.22500 G 0.22500 T 0.27500 
+
+MOTIF TCP_tnt.TCP16_col_a_m1 MEME
+
+letter-probability matrix: alength= 4 w= 11 nsites= 80 E= 1.3e-164
+  0.175000	  0.062500	  0.662500	  0.100000	
+  0.137500	  0.125000	  0.050000	  0.687500	
+  0.037500	  0.150000	  0.437500	  0.375000	
+  0.012500	  0.000000	  0.975000	  0.012500	
+  0.000000	  0.000000	  0.987500	  0.012500	
+  0.000000	  0.012500	  0.987500	  0.000000	
+  0.087500	  0.325000	  0.012500	  0.575000	
+  0.000000	  1.000000	  0.000000	  0.000000	
+  0.000000	  1.000000	  0.000000	  0.000000	
+  1.000000	  0.000000	  0.000000	  0.000000	
+  0.000000	  1.000000	  0.000000	  0.000000	
+

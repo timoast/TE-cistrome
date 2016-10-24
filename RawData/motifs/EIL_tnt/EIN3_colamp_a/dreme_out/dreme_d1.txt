@@ -1,0 +1,28 @@
+MEME version 4.10.1
+
+ALPHABET= ACGT
+
+strands: + -
+
+Background letter frequencies (from dataset):
+A 0.320 C 0.179 G 0.182 T 0.319
+
+MOTIF EIL_tnt.EIN3_colamp_a_d1 DREME
+
+#             Word    RC Word        Pos        Neg    P-value    E-value
+# BEST     RCCGTTR    YAACGGY        279         16   2.9e-080   8.9e-076
+#          ACCGTTA    TAACGGT        132          7   1.7e-034   5.1e-030
+#          ACCGTTG    CAACGGT        122          4   1.9e-034   5.8e-030
+#          GCCGTTG    CAACGGC         56          1   1.1e-016   3.3e-012
+#          GCCGTTA    TAACGGC         47          4   5.5e-011   1.7e-006
+
+letter-probability matrix: alength= 4 w= 7 nsites= 415 E= 8.9e-076
+0.727711 0.000000 0.272289 0.000000
+0.000000 1.000000 0.000000 0.000000
+0.000000 1.000000 0.000000 0.000000
+0.000000 0.000000 1.000000 0.000000
+0.000000 0.000000 0.000000 1.000000
+0.000000 0.000000 0.000000 1.000000
+0.506024 0.000000 0.493976 0.000000
+
+

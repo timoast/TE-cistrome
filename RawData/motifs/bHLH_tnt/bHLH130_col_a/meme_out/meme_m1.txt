@@ -1,0 +1,24 @@
+MEME version 4.4
+
+ALPHABET= ACGT
+
+strands: + -
+
+Background letter frequencies (from /mnt/thumper-e1/home/shhuang/projects/dap/analysis.v4/gem07_rep_memechip03/bHLH_tnt/bHLH130_col_a/background):
+A 0.31300 C 0.18700 G 0.18700 T 0.31300 
+
+MOTIF bHLH_tnt.bHLH130_col_a_m1 MEME
+
+letter-probability matrix: alength= 4 w= 11 nsites= 185 E= 5.9e-307
+  0.351351	  0.075676	  0.291892	  0.281081	
+  0.167568	  0.178378	  0.367568	  0.286486	
+  0.000000	  0.994595	  0.005405	  0.000000	
+  0.529730	  0.470270	  0.000000	  0.000000	
+  1.000000	  0.000000	  0.000000	  0.000000	
+  0.005405	  0.994595	  0.000000	  0.000000	
+  0.005405	  0.000000	  0.000000	  0.994595	
+  0.021622	  0.000000	  0.000000	  0.978378	
+  0.000000	  0.000000	  1.000000	  0.000000	
+  0.097297	  0.567568	  0.091892	  0.243243	
+  0.427027	  0.281081	  0.102703	  0.189189	
+

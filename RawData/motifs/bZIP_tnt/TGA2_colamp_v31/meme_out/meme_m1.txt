@@ -1,0 +1,24 @@
+MEME version 4.4
+
+ALPHABET= ACGT
+
+strands: + -
+
+Background letter frequencies (from /mnt/thumper-e1/home/shhuang/projects/dap/analysis.v4/gem07_rep_memechip03/bZIP_tnt/TGA2_colamp_v31/background):
+A 0.23400 C 0.26600 G 0.26600 T 0.23400 
+
+MOTIF bZIP_tnt.TGA2_colamp_v31_m1 MEME
+
+letter-probability matrix: alength= 4 w= 11 nsites= 583 E= 1.0e-632
+  0.030875	  0.399657	  0.008576	  0.560892	
+  0.195540	  0.161235	  0.511149	  0.132075	
+  0.668954	  0.271012	  0.005146	  0.054889	
+  0.000000	  0.998285	  0.000000	  0.001715	
+  0.217839	  0.008576	  0.751286	  0.022298	
+  0.001715	  0.250429	  0.001715	  0.746141	
+  0.020583	  0.979417	  0.000000	  0.000000	
+  0.969125	  0.000000	  0.000000	  0.030875	
+  0.000000	  0.399657	  0.226415	  0.373928	
+  0.022298	  0.869640	  0.061750	  0.046312	
+  0.538593	  0.073756	  0.217839	  0.169811	
+

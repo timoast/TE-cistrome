@@ -1,0 +1,25 @@
+MEME version 4.10.1
+
+ALPHABET= ACGT
+
+strands: + -
+
+Background letter frequencies (from dataset):
+A 0.396 C 0.099 G 0.104 T 0.401
+
+MOTIF ARID_tnt.At3g13350_col_a_d1 DREME
+
+#             Word    RC Word        Pos        Neg    P-value    E-value
+# BEST      TTATWA     TWATAA        511        383   8.7e-018   1.8e-013
+#           TTATTA     TAATAA        400        299   2.2e-009   4.5e-005
+#           TTATAA     TTATAA        254        188   4.9e-005   1.0e+000
+
+letter-probability matrix: alength= 4 w= 6 nsites= 837 E= 1.8e-013
+0.000000 0.000000 0.000000 1.000000
+0.000000 0.000000 0.000000 1.000000
+1.000000 0.000000 0.000000 0.000000
+0.000000 0.000000 0.000000 1.000000
+0.338112 0.000000 0.000000 0.661888
+1.000000 0.000000 0.000000 0.000000
+
+

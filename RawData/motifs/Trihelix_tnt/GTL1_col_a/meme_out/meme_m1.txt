@@ -1,0 +1,23 @@
+MEME version 4.4
+
+ALPHABET= ACGT
+
+strands: + -
+
+Background letter frequencies (from /mnt/thumper-e1/home/shhuang/projects/dap/analysis.v4/gem07_rep_memechip03/Trihelix_tnt/GTL1_col_a/background):
+A 0.35300 C 0.14700 G 0.14700 T 0.35300 
+
+MOTIF Trihelix_tnt.GTL1_col_a_m1 MEME
+
+letter-probability matrix: alength= 4 w= 10 nsites= 599 E= 1.5e-437
+  0.646077	  0.060100	  0.188648	  0.105175	
+  0.205342	  0.447412	  0.061770	  0.285476	
+  0.342237	  0.083472	  0.522538	  0.051753	
+  0.000000	  0.000000	  1.000000	  0.000000	
+  0.000000	  0.000000	  0.000000	  1.000000	
+  0.859766	  0.000000	  0.000000	  0.140234	
+  1.000000	  0.000000	  0.000000	  0.000000	
+  0.958264	  0.011686	  0.000000	  0.030050	
+  0.717863	  0.000000	  0.000000	  0.282137	
+  0.612688	  0.043406	  0.110184	  0.233723	
+

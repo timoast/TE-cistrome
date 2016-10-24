@@ -1,0 +1,24 @@
+MEME version 4.4
+
+ALPHABET= ACGT
+
+strands: + -
+
+Background letter frequencies (from /mnt/thumper-e1/home/shhuang/projects/dap/analysis.v4/gem07_rep_memechip03/WRKY_tnt/WRKY30_col_a/background):
+A 0.30500 C 0.19500 G 0.19500 T 0.30500 
+
+MOTIF WRKY_tnt.WRKY30_col_a_m1 MEME
+
+letter-probability matrix: alength= 4 w= 11 nsites= 583 E= 2.1e-1305
+  0.612350	  0.113208	  0.138937	  0.135506	
+  0.787307	  0.025729	  0.070326	  0.116638	
+  0.881647	  0.003431	  0.114923	  0.000000	
+  0.000000	  0.000000	  1.000000	  0.000000	
+  0.000000	  0.000000	  0.000000	  1.000000	
+  0.000000	  1.000000	  0.000000	  0.000000	
+  1.000000	  0.000000	  0.000000	  0.000000	
+  1.000000	  0.000000	  0.000000	  0.000000	
+  0.005146	  0.987993	  0.000000	  0.006861	
+  0.053173	  0.109777	  0.692967	  0.144082	
+  0.214408	  0.375643	  0.221269	  0.188679	
+

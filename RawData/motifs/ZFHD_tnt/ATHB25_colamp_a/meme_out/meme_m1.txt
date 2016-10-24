@@ -1,0 +1,24 @@
+MEME version 4.4
+
+ALPHABET= ACGT
+
+strands: + -
+
+Background letter frequencies (from /mnt/thumper-e1/home/shhuang/projects/dap/analysis.v4/gem07_rep_memechip03/ZFHD_tnt/ATHB25_colamp_a/background):
+A 0.35700 C 0.14300 G 0.14300 T 0.35700 
+
+MOTIF ZFHD_tnt.ATHB25_colamp_a_m1 MEME
+
+letter-probability matrix: alength= 4 w= 11 nsites= 597 E= 1.5e-331
+  0.224456	  0.343384	  0.159129	  0.273032	
+  0.298157	  0.107203	  0.331658	  0.262982	
+  0.000000	  0.040201	  0.000000	  0.959799	
+  0.638191	  0.070352	  0.291457	  0.000000	
+  0.993300	  0.005025	  0.001675	  0.000000	
+  0.000000	  0.000000	  0.000000	  1.000000	
+  0.000000	  0.000000	  0.000000	  1.000000	
+  1.000000	  0.000000	  0.000000	  0.000000	
+  0.536013	  0.015075	  0.396985	  0.051926	
+  0.020101	  0.298157	  0.249581	  0.432161	
+  0.281407	  0.159129	  0.340034	  0.219430	
+
